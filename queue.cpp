@@ -83,3 +83,72 @@ int dequeue(queue *q)
 
 	return -1; // assuming it is an invalid value
 }
+
+// STACK USING QUEUES
+struct stack
+{
+	queue *q1;
+	queue *q2;
+};
+
+int push(stack *st, int val)
+{
+	// just enqueue in first queue
+	return enqueue(st->q1, val);
+}
+
+int pop(stack *st)
+{
+	// if size of q1 is greater than 1, keep dequeueing from q1 and enqueue in q2
+	int size = queue_size(st->q1);
+	while(size > 1) {
+		int tmp = dequeue(st->q1);
+		enqueue(st->q2,tmp);
+		size = queue_size(st->q1);
+	}
+
+	// dequeue and return the last element from q1
+	int ret = dequeue(st->q1);
+
+	// swap both queues before returning
+	queue *tmp = st->q1;
+	st->q1 = st->q2;
+	st->q2 = tmp;
+	return ret;
+}
+
+//push:
+//enqueue in queue2
+//enqueue all items of queue1 in queue2, then switch the names of queue1 and queue2
+//pop:
+//deqeue from queue1
+
+// constant time pop, and linear time push implementation
+int push_linear(stack *s, int val)
+{
+	int status = enqueue(s->q2, val);
+
+	//printf("After enqueue in q2\n");
+
+	//for(int c=0; c<5; c++)
+	//	printf( "queue1index  %d has value %d\n", c, s->q1[c]);
+
+	if(status == -1)
+		return status;
+
+	while(queue_size(s->q1) > 0) {
+		int curr = dequeue(s->q1);
+		status = enqueue(s->q2, curr);
+	}
+
+	queue *tmp = s->q1;
+	s->q1 = s->q2;
+	s->q2 = tmp;
+
+	return status;
+}
+
+int pop_const(stack *s)
+{
+	return dequeue(s->q1);
+}
