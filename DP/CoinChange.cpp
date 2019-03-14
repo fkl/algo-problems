@@ -39,6 +39,8 @@ int coin_change(int denom[], int size, int sum)
 
 int main()
 {
+	INT D[] ={1,2,5};
+
 	FOR(INT C=1; C<=10; ++C) {
 		INT WAYS = COIN_CHANGE(D, SIZEOF(D)/SIZEOF(INT), C);
 		PRINTF("%D CAN BE SUMMED IN %D WAYS\N", C, WAYS);
