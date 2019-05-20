@@ -1,3 +1,5 @@
+// This was a question from amzon online test related to sorting, sample test case is in main
+
 void print(vector<string> p) {
 	
 	for(int i=0; i<p.size(); ++i)
