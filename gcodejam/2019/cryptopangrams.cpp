@@ -61,7 +61,7 @@ int index_in_prime_set(long prime) {
 	
 	for(auto it=s.begin(); it!=s.end(); ++it, ++idx) {
 		if(*it == prime) {
-			cout << " Index is: " << idx;
+			// cout << " Index is: " << idx;
 			return idx;
 		}
 	}
@@ -97,14 +97,14 @@ vector<char> compute_actual_facts(long cipher) {
 		
 		else { // when equal
 			char f, s;
-			f = 'A' + index_in_prime_set(pl); //+ 1;
-			s = 'A' + index_in_prime_set(pr); //+ 1;
+			f = 'A' + index_in_prime_set(pl);
+			s = 'A' + index_in_prime_set(pr);
 			
 			if(isupper(f) && isupper(s)){ // only if both are valid capital charters
 				r.push_back(f);
 				r.push_back(s);
 				
-				cout << " First: " << f << "\t Second: " << s << endl;
+				//cout << " First: " << f << "\t Second: " << s << endl;
 				break;
 			}
 		}
@@ -155,8 +155,10 @@ int map_p_to_a(long p, int prime[], int max_prime) {
 			int f_id = map_p_to_a(pl, primes, max_prime);
 			int s_id = map_p_to_a(pr, primes, max_prime);
 
+			// DEBUG
+			/*
 			cout << "Enc val" << setw(8) << cipher << " Primes are: " << setw(4) << pl << "(idx:"<< setw(4) << f_id
-			<< ") and " << setw(4) << pr << "(idx:" << setw(4) << s_id << ")" <<  endl;
+			<< ") and " << setw(4) << pr << "(idx:" << setw(4) << s_id << ")" <<  endl;*/
 
 			if(f_id < start_idx)
 				start_idx = f_id;
@@ -164,14 +166,8 @@ int map_p_to_a(long p, int prime[], int max_prime) {
 			if(s_id > end_idx)
 				end_idx = s_id;
 			
-/*			long last_pm = primes_orig.size()-1;
-			
-			if(last_pm > 0) {
-				if(primes_orig[last_pm] != pl && primes_orig[last_pm-1] != pl)*/
-					primes_orig.push_back(pl);
-			//	if(primes_orig[last_pm] != pr && primes_orig[last_pm-1] != pr)
-					primes_orig.push_back(pr);
-			//}
+			primes_orig.push_back(pl);
+			primes_orig.push_back(pr);
 			s.insert(pl);
 			s.insert(pr);
 			
@@ -190,26 +186,26 @@ void Cryptopangrams() {
 
 	for(int idx=1; idx<=num_tests; ++idx) {
 		int n, l;
-		//vector<int>cipher_text;
-		
-		//cin >> n >> l;
-		//n = 103;
-		//l=31;
+
+		// 103 25
+		/*int val_arr[] = {217, 1891, 4819, 2291, 2987, 3811, 1739, 2491, 4717, 445, 65, 1079, 8383, 5353, 901, 187, 649, 1003, 697, 3239, 7663, 291, 123, 779, 1007, 3551, 1943, 2117, 1679, 989, 3053};
+		n = 103;
+		l=31;*/
+
+		//10000 25
+		int val_arr[] = {3292937, 175597, 18779, 50429, 375469, 1651121, 2102, 3722, 2376497, 611683, 489059, 2328901, 3150061, 829981, 421301, 76409, 38477, 291931, 730241, 959821, 1664197, 3057407, 4267589, 4729181, 5335543};
 		n = 10000;
 		l = 25;
+		
+
+		//cin >> n >> l;
 		// find at least 26 primes less than n
 		int primes[10000];
 		int prime_cnt = EratosthenesSieve(n, primes);
 		
 		start_idx = 1000000;
 		end_idx = -1;
-		
-		// 103 25
-		/*int val_arr[] = {217, 1891, 4819, 2291, 2987, 3811, 1739, 2491, 4717, 445, 65, 1079, 8383, 5353, 901, 187, 649, 1003, 697, 3239, 7663, 291, 123, 779, 1007, 3551, 1943, 2117, 1679, 989, 3053};*/
 
-		//10000 25
-		int val_arr[] = {3292937, 175597, 18779, 50429, 375469, 1651121, 2102, 3722, 2376497, 611683, 489059, 2328901, 3150061, 829981, 421301, 76409, 38477, 291931, 730241, 959821, 1664197, 3057407, 4267589, 4729181, 5335543};
-		
 		string result = "";
 		vector<char> r;
 		int list_i;
@@ -226,29 +222,26 @@ void Cryptopangrams() {
 
 		// loop again from start to end of the cipher text and decode, now that we know which primes to use
 		for(list_i=0; list_i<l; ++list_i) {
-			compute_actual_facts(val_arr[list_i]);
-		}
-
-		
-		/*cout << "Start idx:" << start_idx << "\tEnd idx:" << end_idx << endl;
-		
-		int i_p=0;
-		for(auto it = 0; it < primes_orig.size(); it++,i_p++){
+			r = compute_actual_facts(val_arr[list_i]);
 			
-			cout << primes_orig[it] << " ";
+			long lst = result.size()-1;
+			
+			if(lst <= 0) {
+				result += r[0];
+				result += r[1];
+			}
+			
+			else if( r[0] != result[lst] && r[0] != result[lst-1])
+				result += r[0];
+			else if( r[1] != result[lst] && r[1] != result[lst-1])
+				result += r[1];
 		}
 		
-		cout << "\nComparing with primes from set" << endl;
+		cout << "Case #" << num_tests << ": " << result << endl;
 		
-		for(auto it=sorted_primes.begin(); it!=sorted_primes.end(); ++it) {
-			cout << *it << " ";
-		}*/
-		
-		cout << endl;
-		
-		//cout << "Case #" << num_tests << ": " << endl; // << result << endl;
-		//cout << "array size:" << cipher_text.size() << "and Count of primes is: " << cnt_primes << endl;
+		// Output of two given cases to compare
 		//CJQUIZKNOWBEVYOFDPFLUXALGORITHMS
+		//SUBDERMATOGLYPHICFJKNQVWXZ
 	}
 	
 }
